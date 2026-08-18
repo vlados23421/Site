@@ -70,6 +70,7 @@
         @keyframes faSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .pulse-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #4ade80; animation: pulse-dot 1.5s ease-in-out infinite; }
         @keyframes pulse-dot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.3); } }
+        .rainbow-text { background: linear-gradient(135deg, #6c5ce7, #00cec9, #fdcb6e, #6c5ce7); background-size: 300% 300%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: gradientBG 4s ease infinite; }
 
         /* ========================================== */
         /* === НАВБАР === */
@@ -106,7 +107,6 @@
         .theme-toggle:hover { background: var(--primary-glow); }
         .user-badge { background: var(--primary-glow); padding: 3px 10px; border-radius: 50px; font-size: 11px; color: var(--primary); display: flex; align-items: center; gap: 4px; cursor: pointer; border: 1px solid var(--border); transition: 0.2s; }
         .user-badge:hover { border-color: var(--primary); }
-        .user-badge .balance-mini { font-weight: 700; color: var(--gold); }
 
         /* ========================================== */
         /* === КАРТОЧКИ === */
@@ -134,71 +134,174 @@
         .auth-divider { text-align: center; color: var(--text-muted); font-size: 12px; padding: 4px 0; border-top: 1px solid var(--border); margin-top: 6px; }
 
         /* ========================================== */
+        /* === КОПИРОВАТЬ === */
+        /* ========================================== */
+        .copy-container { display: flex; gap: 6px; flex-wrap: wrap; }
+        .copy-container input { flex: 1; padding: 8px 10px; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 12px; min-width: 120px; font-family: inherit; }
+        .copy-container .copy-btn { padding: 8px 14px; background: var(--gradient); color: #fff; border: none; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; transition: transform 0.2s; white-space: nowrap; }
+        .copy-container .copy-btn:active { transform: scale(0.95); }
+
+        /* ========================================== */
         /* === ЛИЧНЫЙ КАБИНЕТ === */
         /* ========================================== */
-        .profile-header { display: flex; align-items: center; gap: 12px; padding: 4px 0; }
-        .profile-avatar { width: 60px; height: 60px; border-radius: 50%; background: var(--gradient); display: flex; align-items: center; justify-content: center; font-size: 28px; color: #fff; flex-shrink: 0; }
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 4px 0;
+            position: relative;
+        }
+        .profile-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: var(--gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: #fff;
+            flex-shrink: 0;
+            position: relative;
+            border: 3px solid var(--border);
+        }
+        .profile-avatar .level-badge {
+            position: absolute;
+            bottom: -4px;
+            right: -4px;
+            background: var(--gold);
+            color: #000;
+            font-size: 10px;
+            font-weight: 800;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--bg-card);
+        }
         .profile-info h3 { font-size: 18px; }
         .profile-info p { color: var(--text-muted); font-size: 13px; }
-        .balance-display { background: var(--primary-glow); border-radius: 12px; padding: 16px; text-align: center; border: 1px solid var(--border); }
-        .balance-display .amount { font-size: 36px; font-weight: 900; color: var(--gold); }
-        .balance-display .label { font-size: 12px; color: var(--text-muted); }
-        .balance-display .btn-group { display: flex; gap: 8px; justify-content: center; margin-top: 10px; flex-wrap: wrap; }
-        .balance-display .btn-group .btn { padding: 8px 20px; font-size: 13px; background: var(--gradient); color: #fff; border: none; border-radius: 8px; cursor: pointer; transition: transform 0.2s; }
-        .balance-display .btn-group .btn:active { transform: scale(0.95); }
-        .balance-display .btn-group .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+        .profile-info .status { font-size: 11px; color: var(--success); }
 
-        .order-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
-        .order-item:last-child { border-bottom: none; }
-        .order-item .status { font-size: 11px; padding: 2px 10px; border-radius: 50px; }
-        .order-item .status.done { background: rgba(74, 222, 128, 0.2); color: #4ade80; }
-        .order-item .status.pending { background: rgba(253, 203, 110, 0.2); color: #fdcb6e; }
-        .order-item .status.processing { background: rgba(108, 92, 231, 0.2); color: #6c5ce7; }
-        .order-item .status.failed { background: rgba(255, 107, 107, 0.2); color: #ff6b6b; }
-        .order-item .date { color: var(--text-muted); font-size: 11px; }
-        .order-item .order-id { color: var(--text-muted); font-size: 10px; font-family: monospace; }
-        .order-empty { text-align: center; padding: 20px 0; color: var(--text-muted); }
-        .order-empty i { font-size: 40px; display: block; margin-bottom: 8px; opacity: 0.3; }
+        .stats-mini {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 6px;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid var(--border);
+        }
+        .stats-mini .stat-item { text-align: center; }
+        .stats-mini .stat-item .num { font-size: 18px; font-weight: 700; color: var(--primary); }
+        .stats-mini .stat-item .label { font-size: 10px; color: var(--text-muted); }
 
-        /* ========================================== */
-        /* === СОЗДАНИЕ ЗАКАЗА === */
-        /* ========================================== */
-        .service-select { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 8px 0; }
-        .service-select .service-btn { padding: 8px; border: 1px solid var(--border); border-radius: 8px; background: rgba(255,255,255,0.03); color: var(--text); cursor: pointer; transition: 0.2s; text-align: center; }
-        .service-select .service-btn:hover { border-color: var(--primary); }
-        .service-select .service-btn.active { border-color: var(--primary); background: var(--primary-glow); }
-        .service-select .service-btn i { font-size: 20px; display: block; margin-bottom: 2px; }
-        .service-select .service-btn .price { font-size: 11px; color: var(--primary); font-weight: 600; }
-        .order-form .row { display: flex; gap: 8px; margin-top: 6px; flex-wrap: wrap; }
-        .order-form .row input { flex: 1; padding: 8px 10px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 13px; min-width: 80px; }
-        .order-form .row .btn { padding: 8px 20px; background: var(--gradient); color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: transform 0.2s; }
-        .order-form .row .btn:active { transform: scale(0.95); }
+        /* ===== НАСТРОЙКИ ===== */
+        .settings-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .settings-item:last-child { border-bottom: none; }
+        .settings-item .left { display: flex; align-items: center; gap: 10px; }
+        .settings-item .left i { font-size: 18px; color: var(--primary); width: 24px; text-align: center; }
+        .settings-item .left .title { font-size: 13px; }
+        .settings-item .left .desc { font-size: 11px; color: var(--text-muted); }
+
+        /* ===== ТОГГЛЫ ===== */
+        .toggle {
+            width: 44px;
+            height: 24px;
+            background: var(--border);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.3s;
+            position: relative;
+            flex-shrink: 0;
+        }
+        .toggle.active { background: var(--gradient); }
+        .toggle .knob {
+            width: 18px;
+            height: 18px;
+            background: #fff;
+            border-radius: 50%;
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            transition: 0.3s;
+        }
+        .toggle.active .knob { left: 23px; }
+
+        .select-style {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            padding: 6px 12px;
+            font-size: 13px;
+            font-family: inherit;
+            cursor: pointer;
+        }
+        .select-style:focus { outline: none; border-color: var(--primary); }
 
         /* ========================================== */
         /* === ГЛАВНЫЙ БАННЕР === */
         /* ========================================== */
-        .hero { background: linear-gradient(135deg, rgba(108, 92, 231, 0.1), rgba(0, 206, 201, 0.04)); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px 16px; text-align: center; margin-bottom: 12px; box-shadow: var(--shadow); position: relative; overflow: hidden; }
-        .hero .icon { font-size: 44px; margin-bottom: 4px; position: relative; z-index: 1; display: inline-block; animation: faBounce 2.5s ease-in-out infinite; }
-        .hero h1 { font-size: 24px; font-weight: 900; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; position: relative; z-index: 1; }
-        .hero p { color: var(--text-muted); font-size: 13px; margin-top: 2px; position: relative; z-index: 1; }
-        .hero .btn { display: inline-block; margin-top: 10px; padding: 10px 24px; background: var(--gradient); color: #fff; border: none; border-radius: 50px; font-weight: 700; font-size: 14px; cursor: pointer; text-decoration: none; transition: transform 0.2s; position: relative; z-index: 1; box-shadow: 0 4px 16px rgba(108, 92, 231, 0.3); }
+        .hero { background: linear-gradient(135deg, rgba(108, 92, 231, 0.15), rgba(0, 206, 201, 0.06)); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px 18px; text-align: center; margin-bottom: 12px; box-shadow: var(--shadow); position: relative; overflow: hidden; }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 50%, rgba(108, 92, 231, 0.03) 0%, transparent 70%);
+            animation: heroGlow 8s ease-in-out infinite;
+        }
+        @keyframes heroGlow {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(20%, 10%); }
+        }
+        .hero .icon { font-size: 48px; margin-bottom: 4px; position: relative; z-index: 1; display: inline-block; animation: faBounce 2.5s ease-in-out infinite; }
+        .hero h1 { font-size: 26px; font-weight: 900; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; position: relative; z-index: 1; }
+        .hero .subtitle { color: var(--text-muted); font-size: 14px; margin-top: 4px; position: relative; z-index: 1; }
+        .hero .highlight { color: var(--gold); font-weight: 700; }
+        .hero .btn { display: inline-block; margin-top: 12px; padding: 12px 28px; background: var(--gradient); color: #fff; border: none; border-radius: 50px; font-weight: 700; font-size: 15px; cursor: pointer; text-decoration: none; transition: transform 0.2s; position: relative; z-index: 1; box-shadow: 0 4px 20px rgba(108, 92, 231, 0.4); }
         .hero .btn:active { transform: scale(0.97); }
+        .hero .badge {
+            display: inline-block;
+            background: rgba(253, 203, 110, 0.15);
+            border: 1px solid rgba(253, 203, 110, 0.3);
+            color: var(--gold);
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 14px;
+            border-radius: 50px;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
 
         /* ========================================== */
         /* === ПРЕИМУЩЕСТВА === */
         /* ========================================== */
         .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-        .feature-item { background: rgba(255, 255, 255, 0.03); border-radius: 10px; padding: 10px; text-align: center; border: 1px solid var(--border); transition: border 0.2s, background 0.2s; }
-        .feature-item i { font-size: 24px; display: block; margin-bottom: 2px; }
-        .feature-item .name { font-size: 12px; font-weight: 600; }
-        .feature-item .desc { font-size: 10px; color: var(--text-muted); }
-
-        /* ========================================== */
-        /* === СТАТИСТИКА === */
-        /* ========================================== */
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; text-align: center; }
-        .stats-grid .stat-num { font-size: 24px; font-weight: 800; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .stats-grid .stat-label { font-size: 11px; color: var(--text-muted); }
+        .feature-item {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            padding: 12px 8px;
+            text-align: center;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+            cursor: default;
+        }
+        .feature-item:hover { border-color: var(--primary); background: var(--primary-glow); transform: translateY(-2px); }
+        .feature-item i { font-size: 28px; display: block; margin-bottom: 4px; }
+        .feature-item .name { font-size: 13px; font-weight: 700; }
+        .feature-item .desc { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
 
         /* ========================================== */
         /* === ПРОГРЕСС-БАР ОНЛАЙН === */
@@ -212,7 +315,7 @@
         /* ========================================== */
         .calc-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 4px; }
         .calc-row input { flex: 1; padding: 8px 10px; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 14px; min-width: 80px; }
-        .calc-row .result { font-size: 18px; font-weight: 700; color: #6c5ce7; background: var(--primary-glow); padding: 6px 16px; border-radius: 8px; white-space: nowrap; }
+        .calc-row .result { font-size: 20px; font-weight: 800; color: #6c5ce7; background: var(--primary-glow); padding: 6px 16px; border-radius: 8px; white-space: nowrap; }
 
         /* ========================================== */
         /* === ТОСТ УВЕДОМЛЕНИЙ === */
@@ -227,44 +330,46 @@
         /* === КУРС МОНЕТ === */
         /* ========================================== */
         .rate-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; }
-        .rate-item { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); border-radius: 8px; padding: 8px 6px; text-align: center; transition: border 0.2s; }
-        .rate-item i { font-size: 18px; display: block; margin-bottom: 2px; }
+        .rate-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px 6px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .rate-item:hover { border-color: var(--primary); transform: translateY(-2px); }
+        .rate-item i { font-size: 20px; display: block; margin-bottom: 2px; }
         .rate-item .price { font-size: 14px; font-weight: 700; color: #6c5ce7; }
         .rate-item .name { font-size: 11px; color: var(--text); }
-        .rate-item .bonus { font-size: 9px; color: #4ade80; }
+        .rate-item .bonus { font-size: 9px; color: #4ade80; font-weight: 600; }
+        .rate-highlight { border-color: var(--gold) !important; background: rgba(253, 203, 110, 0.08) !important; }
 
         /* ========================================== */
         /* === ПРАЙС === */
         /* ========================================== */
         .price-table { display: grid; grid-template-columns: 1fr 1fr; gap: 3px 10px; font-size: 12px; }
-        .price-table .item { display: flex; justify-content: space-between; padding: 3px 0; border-bottom: 1px solid rgba(255,255,255,0.03); }
+        .price-table .item { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.03); }
         .price-table .item .name { color: var(--text-muted); display: flex; align-items: center; gap: 3px; }
         .price-table .item .name i { font-size: 12px; }
-        .price-table .item .cost { color: var(--text); font-weight: 600; }
+        .price-table .item .cost { color: var(--text); font-weight: 700; }
 
         /* ========================================== */
         /* === СОЦИАЛЬНЫЕ КНОПКИ === */
         /* ========================================== */
         .social-links { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-top: 4px; }
-        .social-links .social-btn { display: inline-flex; align-items: center; gap: 5px; padding: 5px 12px; border-radius: 50px; text-decoration: none; font-size: 12px; font-weight: 600; transition: transform 0.2s, border-color 0.2s; border: 1px solid var(--border); background: rgba(255, 255, 255, 0.03); color: var(--text); }
+        .social-links .social-btn { display: inline-flex; align-items: center; gap: 5px; padding: 5px 14px; border-radius: 50px; text-decoration: none; font-size: 12px; font-weight: 600; transition: all 0.3s; border: 1px solid var(--border); background: rgba(255, 255, 255, 0.03); color: var(--text); }
+        .social-links .social-btn:hover { border-color: var(--primary); background: var(--primary-glow); transform: translateY(-2px); }
         .social-links .social-btn:active { transform: scale(0.95); }
         .social-links .social-btn i { font-size: 16px; }
 
         /* ========================================== */
-        /* === КОПИРОВАТЬ ССЫЛКУ === */
-        /* ========================================== */
-        .copy-container { display: flex; gap: 6px; flex-wrap: wrap; }
-        .copy-container input { flex: 1; padding: 8px 10px; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 12px; min-width: 120px; font-family: inherit; }
-        .copy-container .copy-btn { padding: 8px 14px; background: var(--gradient); color: #fff; border: none; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; transition: transform 0.2s; white-space: nowrap; }
-        .copy-container .copy-btn:active { transform: scale(0.95); }
-
-        /* ========================================== */
         /* === FAQ === */
         /* ========================================== */
-        .faq-item { border-bottom: 1px solid var(--border); padding: 6px 0; cursor: pointer; transition: padding 0.2s; }
+        .faq-item { border-bottom: 1px solid var(--border); padding: 8px 0; cursor: pointer; transition: padding 0.2s; }
         .faq-item:last-child { border-bottom: none; }
         .faq-item .q { font-weight: 600; color: var(--text); font-size: 13px; display: flex; justify-content: space-between; align-items: center; }
-        .faq-item .q i { font-size: 14px; }
+        .faq-item .q i { font-size: 14px; width: 20px; }
         .faq-item .q .arrow { transition: 0.3s; display: inline-block; }
         .faq-item .q .arrow.open { transform: rotate(180deg); }
         .faq-item .a { color: var(--text-muted); font-size: 12px; line-height: 1.5; padding-top: 3px; display: none; }
@@ -273,8 +378,23 @@
         /* ========================================== */
         /* === КОНТАКТЫ === */
         /* ========================================== */
-        .contact-item { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: rgba(255, 255, 255, 0.03); border-radius: 10px; border: 1px solid var(--border); text-decoration: none; color: var(--text); transition: border 0.2s, background 0.2s; }
-        .contact-item i { font-size: 20px; }
+        .contact-item { display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: rgba(255, 255, 255, 0.03); border-radius: 10px; border: 1px solid var(--border); text-decoration: none; color: var(--text); transition: all 0.3s; }
+        .contact-item:hover { border-color: var(--primary); background: var(--primary-glow); transform: translateX(4px); }
+        .contact-item i { font-size: 22px; }
+
+        /* ========================================== */
+        /* === РЕФЕРАЛЬНАЯ СТАТИСТИКА === */
+        /* ========================================== */
+        .ref-level {
+            padding: 6px 12px;
+            border-radius: 50px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+        .ref-level.bronze { background: rgba(205, 127, 50, 0.2); color: #cd7f32; }
+        .ref-level.silver { background: rgba(192, 192, 192, 0.2); color: #c0c0c0; }
+        .ref-level.gold { background: rgba(253, 203, 110, 0.2); color: #fdcb6e; }
+        .ref-level.platinum { background: rgba(229, 228, 226, 0.2); color: #e5e4e2; }
 
         /* ========================================== */
         /* === ФУТЕР === */
@@ -290,37 +410,39 @@
         .page.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
+        .order-empty { text-align: center; padding: 20px 0; color: var(--text-muted); }
+        .order-empty i { font-size: 40px; display: block; margin-bottom: 8px; opacity: 0.3; }
+
         /* ========================================== */
         /* === АДАПТИВ === */
         /* ========================================== */
         @media (max-width: 480px) {
             body { padding: 6px; }
-            .hero { padding: 18px 12px; }
-            .hero h1 { font-size: 20px; }
-            .hero .icon { font-size: 36px; }
-            .hero .btn { font-size: 13px; padding: 8px 20px; }
+            .hero { padding: 20px 14px; }
+            .hero h1 { font-size: 22px; }
+            .hero .icon { font-size: 38px; }
+            .hero .btn { font-size: 13px; padding: 10px 22px; }
             .navbar .logo { font-size: 15px; }
             .navbar .nav-links a { font-size: 10px; padding: 3px 6px; }
             .navbar .nav-links a i { font-size: 11px; }
             .card { padding: 12px; }
             .card h2 { font-size: 15px; }
             .rate-grid { grid-template-columns: 1fr 1fr; }
-            .stats-grid { grid-template-columns: 1fr 1fr; }
-            .stats-grid .stat-num { font-size: 20px; }
             .feature-grid { grid-template-columns: 1fr 1fr; }
             .price-table { font-size: 11px; }
             .copy-container input { font-size: 11px; min-width: 100px; }
             .copy-container .copy-btn { font-size: 12px; padding: 6px 12px; }
-            .profile-avatar { width: 48px; height: 48px; font-size: 22px; }
-            .balance-display .amount { font-size: 28px; }
+            .profile-avatar { width: 56px; height: 56px; font-size: 26px; }
+            .profile-avatar .level-badge { width: 20px; height: 20px; font-size: 8px; }
             .auth-form .code-input input { width: 40px; height: 45px; font-size: 18px; }
-            .service-select { grid-template-columns: 1fr 1fr; }
+            .stats-mini { grid-template-columns: 1fr 1fr; }
+            .hero .badge { font-size: 10px; padding: 3px 12px; }
         }
         @media (max-width: 360px) {
             .navbar .nav-links a { font-size: 9px; padding: 2px 5px; }
             .navbar .nav-links a i { font-size: 10px; }
-            .hero h1 { font-size: 18px; }
-            .hero .icon { font-size: 30px; }
+            .hero h1 { font-size: 19px; }
+            .hero .icon { font-size: 32px; }
         }
     </style>
 </head>
@@ -337,6 +459,7 @@
                 <li><a class="active" onclick="switchPage('home')"><i class="fas fa-home"></i></a></li>
                 <li><a onclick="switchPage('rates')"><i class="fas fa-coins"></i></a></li>
                 <li><a onclick="switchPage('prices')"><i class="fas fa-tag"></i></a></li>
+                <li><a onclick="switchPage('referral')"><i class="fas fa-gift"></i></a></li>
                 <li><a onclick="switchPage('profile')"><i class="fas fa-user"></i></a></li>
                 <li><a onclick="switchPage('faq')"><i class="fas fa-question-circle"></i></a></li>
                 <li><a onclick="switchPage('contacts')"><i class="fas fa-address-book"></i></a></li>
@@ -344,7 +467,6 @@
             <div class="user-badge" onclick="switchPage('profile')" id="userBadge">
                 <i class="fas fa-user"></i>
                 <span id="userBadgeText">Войти</span>
-                <span class="balance-mini" id="userBadgeBalance"></span>
             </div>
             <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
         </div>
@@ -355,71 +477,84 @@
         <!-- ===== ГЛАВНАЯ ===== -->
         <div class="page active" id="page-home">
             <div class="hero">
+                <div class="badge">🔥 Скидка 20% на первый заказ</div>
                 <div class="icon fas fa-rocket fa-bounce-custom"></div>
                 <h1>BoostSocialLike</h1>
-                <p>Накрутка подписчиков, лайков и просмотров</p>
-                <a href="https://t.me/SocialLikePro" target="_blank" class="btn">🤖 Начать</a>
+                <p class="subtitle">Накрутка, которая <span class="highlight">работает</span> — <br>быстро, дёшево и без риска</p>
+                <a href="https://t.me/SocialLikePro" target="_blank" class="btn">🤖 Начать в Telegram</a>
             </div>
 
             <!-- ===== ОНЛАЙН ===== -->
             <div class="card">
-                <h2><i class="fas fa-wifi fa-pulse-custom" style="color:#4ade80;"></i> Онлайн</h2>
+                <h2><i class="fas fa-users fa-pulse-custom" style="color:#4ade80;"></i> Сейчас с нами</h2>
                 <div class="online-text">
                     <span>👤 <span id="onlineCount">0</span> пользователей</span>
-                    <span>🔥 <span id="popularityPercent">0</span>%</span>
+                    <span>⚡ <span id="popularityPercent">0</span>% активность</span>
                 </div>
                 <div class="online-bar"><div class="fill" id="onlineFill"></div></div>
             </div>
 
+            <!-- ===== ПРЕИМУЩЕСТВА ===== -->
             <div class="card">
-                <h2><i class="fas fa-fire fa-pulse-custom" style="color:#fdcb6e;"></i> Почему мы?</h2>
+                <h2><i class="fas fa-fire fa-pulse-custom" style="color:#fdcb6e;"></i> Почему выбирают нас?</h2>
                 <div class="feature-grid">
                     <div class="feature-item">
-                        <i class="fas fa-bolt fa-bounce-custom" style="color:#6c5ce7;"></i>
-                        <div class="name">Мгновенно</div>
-                        <div class="desc">Сразу</div>
+                        <i class="fas fa-bolt" style="color:#6c5ce7;"></i>
+                        <div class="name">Мгновенный старт</div>
+                        <div class="desc">Начинаем за 5 секунд</div>
                     </div>
                     <div class="feature-item">
-                        <i class="fas fa-shield-alt fa-pulse-custom" style="color:#00cec9;"></i>
-                        <div class="name">Безопасно</div>
-                        <div class="desc">Не нарушаем</div>
+                        <i class="fas fa-shield-alt" style="color:#00cec9;"></i>
+                        <div class="name">100% безопасно</div>
+                        <div class="desc">Аккаунты в полном порядке</div>
                     </div>
                     <div class="feature-item">
-                        <i class="fas fa-money-bill-wave fa-bounce-custom" style="color:#4ade80;"></i>
-                        <div class="name">Дёшево</div>
-                        <div class="desc">от 0.32₽</div>
+                        <i class="fas fa-gem" style="color:#fdcb6e;"></i>
+                        <div class="name">Кристально честно</div>
+                        <div class="desc">Без скрытых платежей</div>
                     </div>
                     <div class="feature-item">
-                        <i class="fas fa-headphones fa-pulse-custom" style="color:#fdcb6e;"></i>
-                        <div class="name">Поддержка</div>
-                        <div class="desc">В Telegram</div>
+                        <i class="fas fa-headphones-alt" style="color:#4ade80;"></i>
+                        <div class="name">Поддержка 24/7</div>
+                        <div class="desc">Всегда на связи в Telegram</div>
                     </div>
                 </div>
             </div>
 
             <!-- ===== КАЛЬКУЛЯТОР ===== -->
             <div class="card">
-                <h2><i class="fas fa-calculator"></i> Калькулятор</h2>
-                <p class="sub">Сколько подписчиков нужно?</p>
+                <h2><i class="fas fa-calculator"></i> Сколько это стоит?</h2>
+                <p class="sub">Введи количество — узнай цену за 1000 единиц</p>
                 <div class="calc-row">
                     <input type="number" id="calcInput" value="1000" min="1" step="100" oninput="calcPrice()">
                     <span style="color:var(--text-muted);font-size:13px;">ед.</span>
                     <span class="result" id="calcResult">7.04 ₽</span>
                 </div>
-                <p style="font-size:10px;color:var(--text-muted);margin-top:4px;">* Цена за 1000 подписчиков Telegram</p>
+                <p style="font-size:11px;color:var(--text-muted);margin-top:6px;">💡 Цена за 1000 подписчиков в Telegram — всего <strong style="color:var(--gold);">7.04 ₽</strong></p>
             </div>
 
+            <!-- ===== КУРС МОНЕТ СВЁРНУТО ===== -->
             <div class="card">
-                <h2>📊 Нас выбирают</h2>
-                <div class="stats-grid">
-                    <div><div class="stat-num" id="clientsCount">1 247</div><div class="stat-label">Клиентов</div></div>
-                    <div><div class="stat-num" id="ordersCount">3 892</div><div class="stat-label">Заказов</div></div>
-                    <div><div class="stat-num">4.9</div><div class="stat-label">Рейтинг</div></div>
+                <h2><i class="fas fa-coins fa-spin-custom"></i> Курс монет</h2>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+                    <div style="background:rgba(108,92,231,0.06);border-radius:8px;padding:10px;text-align:center;border:1px solid var(--border);">
+                        <i class="fas fa-star" style="font-size:24px;color:#fdcb6e;"></i>
+                        <div style="font-size:13px;color:var(--text-muted);margin-top:2px;">За 1 ⭐</div>
+                        <div style="font-size:20px;font-weight:800;color:#6c5ce7;">1 200 монет</div>
+                    </div>
+                    <div style="background:rgba(0,206,201,0.06);border-radius:8px;padding:10px;text-align:center;border:1px solid var(--border);">
+                        <i class="fab fa-bitcoin" style="font-size:24px;color:#00cec9;"></i>
+                        <div style="font-size:13px;color:var(--text-muted);margin-top:2px;">За 1 ₽ в крипте</div>
+                        <div style="font-size:20px;font-weight:800;color:#00cec9;">1 010 монет</div>
+                    </div>
                 </div>
+                <p style="text-align:center;font-size:11px;color:var(--text-muted);margin-top:6px;">📈 Лучший курс на рынке</p>
             </div>
 
+            <!-- ===== ПОДЕЛИСЬ ===== -->
             <div class="card">
-                <h2>📋 Поделись</h2>
+                <h2><i class="fas fa-share-alt"></i> Расскажи друзьям</h2>
+                <p class="sub">Поделись ссылкой и получи бонус 50 монет</p>
                 <div class="copy-container">
                     <input type="text" id="botLink" value="https://t.me/SocialLikePro" readonly>
                     <button class="copy-btn" onclick="copyLink()">📋</button>
@@ -427,27 +562,125 @@
                 </div>
             </div>
 
+            <!-- ===== СОЦСЕТИ ===== -->
             <div class="card">
-                <h2><i class="fas fa-coins fa-spin-custom"></i> Курс монет</h2>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
-                    <div style="background:rgba(108,92,231,0.06);border-radius:8px;padding:8px;text-align:center;">
-                        <i class="fas fa-star" style="font-size:20px;color:#fdcb6e;"></i>
-                        <div style="font-size:13px;color:var(--text-muted);">За 1 ⭐</div>
-                        <div style="font-size:18px;font-weight:700;color:#6c5ce7;">1 200 монет</div>
+                <h2><i class="fas fa-link"></i> Мы в соцсетях</h2>
+                <div class="social-links">
+                    <a href="https://t.me/SocialLikePro" target="_blank" class="social-btn"><i class="fab fa-telegram-plane fa-pulse-custom"></i> Наш бот</a>
+                    <a href="https://t.me/BoostSocialLikeChannel" target="_blank" class="social-btn"><i class="fab fa-telegram-plane"></i> Канал с акциями</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== РЕФЕРАЛЬНАЯ ПРОГРАММА ===== -->
+        <div class="page" id="page-referral">
+            <div class="card" style="background: linear-gradient(135deg, rgba(108,92,231,0.1), rgba(253,203,110,0.05)); border-color: rgba(253,203,110,0.2);">
+                <div style="text-align:center;padding:4px 0;">
+                    <div style="font-size:48px;display:inline-block;animation:faBounce 2s ease-in-out infinite;">🎁</div>
+                    <h2 style="margin-top:2px;">Реферальная программа</h2>
+                    <p class="sub">Приглашай друзей и получай бонусы</p>
+                </div>
+            </div>
+
+            <!-- Пригласительная ссылка -->
+            <div class="card">
+                <h2><i class="fas fa-link" style="color:#fdcb6e;"></i> Твоя реферальная ссылка</h2>
+                <p class="sub">Поделись ссылкой с друзьями</p>
+                <div class="copy-container">
+                    <input type="text" id="refLink" value="https://t.me/SocialLikePro?start=ref_123456" readonly>
+                    <button class="copy-btn" onclick="copyRefLink()">📋</button>
+                    <button class="copy-btn" onclick="shareRefLink()">📤</button>
+                </div>
+                <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;justify-content:center;">
+                    <button class="btn" style="padding:6px 16px;font-size:12px;background:transparent;border:1px solid var(--border);color:var(--text);border-radius:8px;cursor:pointer;" onclick="shareRefTelegram()">
+                        <i class="fab fa-telegram"></i> Отправить в Telegram
+                    </button>
+                </div>
+            </div>
+
+            <!-- Бонусы за приглашение -->
+            <div class="card" style="border-color:rgba(74,222,128,0.2);">
+                <h2><i class="fas fa-gift" style="color:#4ade80;"></i> Бонусы за приглашение</h2>
+                <p class="sub">💰 После выполнения подписок другом</p>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px;">
+                    <div style="background:rgba(74,222,128,0.06);border-radius:10px;padding:12px;text-align:center;border:1px solid rgba(74,222,128,0.1);">
+                        <div style="font-size:28px;font-weight:800;color:#4ade80;">7500</div>
+                        <div style="font-size:12px;color:var(--text-muted);">Ты получаешь</div>
+                        <div style="font-size:11px;color:#4ade80;font-weight:600;">баллов</div>
                     </div>
-                    <div style="background:rgba(0,206,201,0.06);border-radius:8px;padding:8px;text-align:center;">
-                        <i class="fab fa-bitcoin" style="font-size:20px;color:#00cec9;"></i>
-                        <div style="font-size:13px;color:var(--text-muted);">За 1 ₽ в крипте</div>
-                        <div style="font-size:18px;font-weight:700;color:#00cec9;">1 010 монет</div>
+                    <div style="background:rgba(108,92,231,0.06);border-radius:10px;padding:12px;text-align:center;border:1px solid rgba(108,92,231,0.1);">
+                        <div style="font-size:28px;font-weight:800;color:#6c5ce7;">1000</div>
+                        <div style="font-size:12px;color:var(--text-muted);">Друг получает</div>
+                        <div style="font-size:11px;color:#6c5ce7;font-weight:600;">баллов</div>
                     </div>
                 </div>
             </div>
 
+            <!-- Скидки -->
+            <div class="card" style="border-color:rgba(253,203,110,0.2);">
+                <h2><i class="fas fa-tags" style="color:#fdcb6e;"></i> Скидки за рефералов</h2>
+                <p class="sub">Чем больше друзей — тем выше скидка</p>
+                <div style="display:flex;flex-direction:column;gap:6px;margin-top:4px;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(255,255,255,0.03);border-radius:8px;border:1px solid var(--border);">
+                        <div>
+                            <span style="font-weight:600;">👥 20 человек</span>
+                            <span class="ref-level bronze" style="margin-left:6px;">бронза</span>
+                        </div>
+                        <span style="font-size:20px;font-weight:800;color:#cd7f32;">5%</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(255,255,255,0.03);border-radius:8px;border:1px solid var(--border);">
+                        <div>
+                            <span style="font-weight:600;">👥 50 человек</span>
+                            <span class="ref-level silver" style="margin-left:6px;">серебро</span>
+                        </div>
+                        <span style="font-size:20px;font-weight:800;color:#c0c0c0;">10%</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(255,255,255,0.03);border-radius:8px;border:1px solid var(--border);">
+                        <div>
+                            <span style="font-weight:600;">👥 100 человек</span>
+                            <span class="ref-level gold" style="margin-left:6px;">золото</span>
+                        </div>
+                        <span style="font-size:20px;font-weight:800;color:#fdcb6e;">15%</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(253,203,110,0.06);border-radius:8px;border:1px solid rgba(253,203,110,0.2);">
+                        <div>
+                            <span style="font-weight:600;">👥 500 человек</span>
+                            <span class="ref-level platinum" style="margin-left:6px;">платина 🔥</span>
+                        </div>
+                        <span style="font-size:20px;font-weight:800;color:#e5e4e2;">25%</span>
+                    </div>
+                </div>
+                <p style="text-align:center;font-size:11px;color:var(--text-muted);margin-top:8px;">💡 Скидка применяется автоматически при заказе</p>
+            </div>
+
+            <!-- Статистика рефералов -->
             <div class="card">
-                <h2><i class="fas fa-share-alt"></i> Мы в соцсетях</h2>
-                <div class="social-links">
-                    <a href="https://t.me/SocialLikePro" target="_blank" class="social-btn"><i class="fab fa-telegram-plane fa-pulse-custom"></i> Бот</a>
-                    <a href="https://t.me/BoostSocialLikeChannel" target="_blank" class="social-btn"><i class="fab fa-telegram-plane"></i> Канал</a>
+                <h2><i class="fas fa-chart-line" style="color:#00cec9;"></i> Твоя статистика</h2>
+                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:4px;">
+                    <div style="text-align:center;padding:8px;background:rgba(255,255,255,0.03);border-radius:8px;border:1px solid var(--border);">
+                        <div style="font-size:24px;font-weight:800;color:#6c5ce7;" id="refTotal">0</div>
+                        <div style="font-size:10px;color:var(--text-muted);">Всего рефералов</div>
+                    </div>
+                    <div style="text-align:center;padding:8px;background:rgba(255,255,255,0.03);border-radius:8px;border:1px solid var(--border);">
+                        <div style="font-size:24px;font-weight:800;color:#4ade80;" id="refActive">0</div>
+                        <div style="font-size:10px;color:var(--text-muted);">Активных</div>
+                    </div>
+                    <div style="text-align:center;padding:8px;background:rgba(255,255,255,0.03);border-radius:8px;border:1px solid var(--border);">
+                        <div style="font-size:24px;font-weight:800;color:#fdcb6e;" id="refBonus">0</div>
+                        <div style="font-size:10px;color:var(--text-muted);">Заработано баллов</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Список рефералов -->
+            <div class="card">
+                <h2><i class="fas fa-users" style="color:#6c5ce7;"></i> Твои рефералы</h2>
+                <div id="refList">
+                    <div class="order-empty">
+                        <i class="fas fa-user-plus" style="font-size:32px;opacity:0.3;"></i>
+                        <p>Пока нет рефералов</p>
+                        <p style="font-size:11px;">Пригласи друзей и получи бонусы!</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -458,15 +691,13 @@
             <div id="authSection">
                 <div class="card">
                     <h2><i class="fas fa-sign-in-alt"></i> Вход в кабинет</h2>
-                    <p class="sub">Введите номер телефона, мы пришлём код</p>
+                    <p class="sub">Введите номер телефона — мы пришлём код</p>
                     <div class="auth-form">
-                        <!-- Шаг 1: Ввод номера -->
                         <div id="stepPhone">
                             <input type="tel" id="phoneInput" placeholder="+7 (999) 123-45-67" value="+7 999 123-45-67">
                             <button class="btn" onclick="sendSMS()">📱 Отправить код</button>
                         </div>
                         
-                        <!-- Шаг 2: Ввод кода -->
                         <div id="stepCode" style="display:none;">
                             <div class="code-input" id="codeInputs">
                                 <input type="text" maxlength="1" oninput="moveCodeInput(this, 0)">
@@ -481,7 +712,7 @@
                             <div class="timer" id="timerDisplay">⏱️ 60 сек</div>
                         </div>
                         
-                        <div class="auth-divider">🔑 Демо: любой код подходит (например, 1234)</div>
+                        <div class="auth-divider">🔑 Демо: любой 4-значный код</div>
                     </div>
                 </div>
             </div>
@@ -491,83 +722,99 @@
                 <!-- Профиль -->
                 <div class="card">
                     <div class="profile-header">
-                        <div class="profile-avatar" id="userAvatar">👤</div>
+                        <div class="profile-avatar" id="userAvatar">
+                            👤
+                            <div class="level-badge" id="levelBadge">1</div>
+                        </div>
                         <div class="profile-info">
                             <h3 id="userName">Пользователь</h3>
                             <p id="userPhone">+7 999 123-45-67</p>
-                            <p style="font-size:11px;color:var(--text-muted);"><span class="pulse-dot"></span> Активен сейчас</p>
+                            <p class="status"><span class="pulse-dot"></span> В сети</p>
                         </div>
                     </div>
-                </div>
-
-                <!-- Баланс -->
-                <div class="card">
-                    <div class="balance-display">
-                        <div class="label">💰 Баланс</div>
-                        <div class="amount" id="userBalance">0</div>
-                        <div class="label">монет</div>
-                        <div class="btn-group">
-                            <button class="btn" onclick="openTopup()">💳 Пополнить</button>
-                            <button class="btn btn-outline" onclick="refreshData()">🔄 Обновить</button>
+                    <div class="stats-mini">
+                        <div class="stat-item">
+                            <div class="num" id="daysCount">0</div>
+                            <div class="label">Дней с нами</div>
                         </div>
-                    </div>
-                </div>
-
-                <!-- Создание заказа -->
-                <div class="card">
-                    <h2>🛒 Новый заказ</h2>
-                    <div class="service-select" id="serviceSelect">
-                        <div class="service-btn active" onclick="selectService(this, 'telegram', 7.04)" data-price="7.04">
-                            <i class="fab fa-telegram"></i>
-                            <div>Telegram</div>
-                            <div class="price">7.04 ₽</div>
+                        <div class="stat-item">
+                            <div class="num" id="levelName">Новичок</div>
+                            <div class="label">Ваш уровень</div>
                         </div>
-                        <div class="service-btn" onclick="selectService(this, 'tiktok', 7.52)" data-price="7.52">
-                            <i class="fab fa-tiktok"></i>
-                            <div>TikTok</div>
-                            <div class="price">7.52 ₽</div>
-                        </div>
-                        <div class="service-btn" onclick="selectService(this, 'instagram', 18.40)" data-price="18.40">
-                            <i class="fab fa-instagram"></i>
-                            <div>Instagram</div>
-                            <div class="price">18.40 ₽</div>
-                        </div>
-                        <div class="service-btn" onclick="selectService(this, 'vk', 0.32)" data-price="0.32">
-                            <i class="fab fa-vk"></i>
-                            <div>VK</div>
-                            <div class="price">0.32 ₽</div>
-                        </div>
-                    </div>
-                    <div class="order-form">
-                        <div class="row">
-                            <input type="number" id="orderAmount" placeholder="Количество" value="1000" min="1">
-                            <input type="text" id="orderLink" placeholder="Ссылка на пост/канал" style="flex:2;">
-                        </div>
-                        <div class="row">
-                            <span style="color:var(--text-muted);font-size:13px;">Итого: <strong id="orderTotal" style="color:var(--primary);">7.04 ₽</strong></span>
-                            <button class="btn" onclick="createOrder()">🚀 Заказать</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- История заказов -->
-                <div class="card">
-                    <h2>📋 История заказов</h2>
-                    <div id="ordersList">
-                        <div class="order-empty">
-                            <i class="fas fa-inbox"></i>
-                            <p>Заказов пока нет</p>
-                            <p style="font-size:11px;">Создайте первый заказ выше</p>
+                        <div class="stat-item">
+                            <div class="num" id="achievementsCount">0</div>
+                            <div class="label">Достижений</div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Настройки -->
                 <div class="card">
-                    <h2>⚙️ Настройки</h2>
-                    <button class="btn" style="width:100%;background:rgba(255,0,0,0.1);color:#ff6b6b;border:1px solid rgba(255,0,0,0.2);" onclick="logout()">
-                        <i class="fas fa-sign-out-alt"></i> Выйти
+                    <h2><i class="fas fa-sliders-h"></i> Настройки</h2>
+                    
+                    <div class="settings-item">
+                        <div class="left">
+                            <i class="fas fa-moon"></i>
+                            <div>
+                                <div class="title">Тёмная тема</div>
+                                <div class="desc">Изменить оформление</div>
+                            </div>
+                        </div>
+                        <div class="toggle active" id="themeToggle" onclick="toggleThemeSettings()">
+                            <div class="knob"></div>
+                        </div>
+                    </div>
+
+                    <div class="settings-item">
+                        <div class="left">
+                            <i class="fas fa-bell"></i>
+                            <div>
+                                <div class="title">Уведомления</div>
+                                <div class="desc">Получать уведомления</div>
+                            </div>
+                        </div>
+                        <div class="toggle active" id="notifToggle" onclick="toggleNotification()">
+                            <div class="knob"></div>
+                        </div>
+                    </div>
+
+                    <div class="settings-item">
+                        <div class="left">
+                            <i class="fas fa-globe"></i>
+                            <div>
+                                <div class="title">Язык</div>
+                                <div class="desc">Выберите язык интерфейса</div>
+                            </div>
+                        </div>
+                        <select class="select-style" id="langSelect" onchange="changeLanguage(this.value)">
+                            <option value="ru">🇷🇺 Русский</option>
+                            <option value="en">🇬🇧 English</option>
+                            <option value="kz">🇰🇿 Қазақша</option>
+                        </select>
+                    </div>
+
+                    <div class="settings-item">
+                        <div class="left">
+                            <i class="fas fa-shield-alt"></i>
+                            <div>
+                                <div class="title">Приватность</div>
+                                <div class="desc">Управление данными</div>
+                            </div>
+                        </div>
+                        <button class="btn" style="padding:4px 14px;font-size:12px;background:transparent;border:1px solid var(--border);color:var(--text);border-radius:6px;cursor:pointer;transition:0.2s;" onmouseover="this.style.borderColor='#6c5ce7'" onmouseout="this.style.borderColor='var(--border)'" onclick="showPrivacy()">
+                            Управлять
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Выход -->
+                <div class="card">
+                    <button class="btn" style="width:100%;background:rgba(255,0,0,0.1);color:#ff6b6b;border:1px solid rgba(255,0,0,0.15);transition:0.3s;" onmouseover="this.style.background='rgba(255,0,0,0.2)'" onmouseout="this.style.background='rgba(255,0,0,0.1)'" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Выйти из аккаунта
                     </button>
+                    <p style="text-align:center;font-size:10px;color:var(--text-muted);margin-top:8px;">
+                        🗓️ Регистрация: <span id="regDate">—</span>
+                    </p>
                 </div>
             </div>
         </div>
@@ -576,61 +823,69 @@
         <div class="page" id="page-rates">
             <div class="card">
                 <h2><i class="fas fa-coins fa-spin-custom"></i> Курс монет</h2>
-                <p class="sub">1 ⭐ = 1 200 монет • 1 ₽ = 1 010 монет</p>
+                <p class="sub">Выгодный обмен для наших клиентов</p>
                 <div class="rate-grid">
-                    <div class="rate-item"><i class="fas fa-star"></i><div class="price">1 ⭐</div><div class="name">1 200 м.</div></div>
-                    <div class="rate-item"><i class="fas fa-star"></i><div class="price">5 ⭐</div><div class="name">6 600 м.</div></div>
-                    <div class="rate-item"><i class="fas fa-star"></i><div class="price">10 ⭐</div><div class="name">14 400 м.</div></div>
-                    <div class="rate-item"><i class="fas fa-star"></i><div class="price">25 ⭐</div><div class="name">36 000 м.</div></div>
-                    <div class="rate-item"><i class="fas fa-star"></i><div class="price">50 ⭐</div><div class="name">78 000 м.</div></div>
-                    <div class="rate-item"><i class="fas fa-star"></i><div class="price">75 ⭐</div><div class="name">126 000 м.</div></div>
-                    <div class="rate-item" style="border-color:#6c5ce7;background:var(--primary-glow);">
+                    <div class="rate-item"><i class="fas fa-star"></i><div class="price">1 ⭐</div><div class="name">1 200 монет</div></div>
+                    <div class="rate-item"><i class="fas fa-star"></i><div class="price">5 ⭐</div><div class="name">6 600 монет</div></div>
+                    <div class="rate-item"><i class="fas fa-star"></i><div class="price">10 ⭐</div><div class="name">14 400 монет</div></div>
+                    <div class="rate-item"><i class="fas fa-star"></i><div class="price">25 ⭐</div><div class="name">36 000 монет</div></div>
+                    <div class="rate-item"><i class="fas fa-star"></i><div class="price">50 ⭐</div><div class="name">78 000 монет</div></div>
+                    <div class="rate-item"><i class="fas fa-star"></i><div class="price">75 ⭐</div><div class="name">126 000 монет</div></div>
+                    <div class="rate-item rate-highlight">
                         <i class="fas fa-crown" style="color:#fdcb6e;"></i>
                         <div class="price">100 ⭐</div>
-                        <div class="name">168 000 м.</div>
-                        <div class="bonus">🔥 +40%</div>
+                        <div class="name">168 000 монет</div>
+                        <div class="bonus">🔥 +40% бонус</div>
                     </div>
                 </div>
-                <h3 style="font-size:14px;color:var(--text);margin:8px 0 6px;">💰 Крипта</h3>
+                <h3 style="font-size:14px;color:var(--text);margin:10px 0 6px;">💎 Пополнение в криптовалюте</h3>
                 <div class="rate-grid">
-                    <div class="rate-item"><i class="fab fa-bitcoin"></i><div class="price">1.5 ₽</div><div class="name">1 515 м.</div></div>
-                    <div class="rate-item"><i class="fab fa-bitcoin"></i><div class="price">7.5 ₽</div><div class="name">7 575 м.</div></div>
-                    <div class="rate-item"><i class="fab fa-bitcoin"></i><div class="price">15 ₽</div><div class="name">15 150 м.</div></div>
-                    <div class="rate-item"><i class="fab fa-bitcoin"></i><div class="price">38 ₽</div><div class="name">38 380 м.</div></div>
+                    <div class="rate-item"><i class="fab fa-bitcoin"></i><div class="price">1.5 ₽</div><div class="name">1 515 монет</div></div>
+                    <div class="rate-item"><i class="fab fa-bitcoin"></i><div class="price">7.5 ₽</div><div class="name">7 575 монет</div></div>
+                    <div class="rate-item"><i class="fab fa-bitcoin"></i><div class="price">15 ₽</div><div class="name">15 150 монет</div></div>
+                    <div class="rate-item"><i class="fab fa-bitcoin"></i><div class="price">38 ₽</div><div class="name">38 380 монет</div></div>
                 </div>
+                <p style="text-align:center;font-size:11px;color:var(--text-muted);margin-top:8px;">💰 Дополнительный бонус 5% за пополнение через крипту</p>
             </div>
         </div>
 
         <!-- ===== ПРАЙС ===== -->
         <div class="page" id="page-prices">
             <div class="card">
-                <h2><i class="fas fa-tag fa-bounce-custom"></i> Прайс</h2>
-                <p class="sub">За 1000 единиц</p>
-                <h3 style="font-size:13px;color:var(--text);margin:6px 0 4px;">📱 Telegram</h3>
+                <h2><i class="fas fa-tag fa-bounce-custom"></i> Наши цены</h2>
+                <p class="sub">Прозрачные тарифы без скрытых платежей</p>
+                
+                <h3 style="font-size:13px;color:var(--text);margin:8px 0 4px;">📱 Telegram</h3>
                 <div class="price-table">
                     <div class="item"><span class="name"><i class="fas fa-users"></i> Подписчики</span><span class="cost">7.04 ₽</span></div>
                     <div class="item"><span class="name"><i class="fas fa-eye"></i> Просмотры</span><span class="cost">0.50 ₽</span></div>
                     <div class="item"><span class="name"><i class="fas fa-heart"></i> Реакции</span><span class="cost">2.65 ₽</span></div>
                     <div class="item"><span class="name"><i class="fas fa-robot"></i> Запуск ботов</span><span class="cost">27.30 ₽</span></div>
-                    <div class="item"><span class="name"><i class="fas fa-crown"></i> Elite</span><span class="cost">63.00 ₽</span></div>
+                    <div class="item"><span class="name"><i class="fas fa-crown"></i> VIP-пакет</span><span class="cost">63.00 ₽</span></div>
                 </div>
-                <h3 style="font-size:13px;color:var(--text);margin:8px 0 4px;">🎵 TikTok</h3>
+                
+                <h3 style="font-size:13px;color:var(--text);margin:10px 0 4px;">🎵 TikTok</h3>
                 <div class="price-table">
                     <div class="item"><span class="name"><i class="fas fa-play"></i> Просмотры</span><span class="cost">7.52 ₽</span></div>
                     <div class="item"><span class="name"><i class="fas fa-heart"></i> Лайки</span><span class="cost">20.76 ₽</span></div>
                     <div class="item"><span class="name"><i class="fas fa-users"></i> Подписчики</span><span class="cost">404.66 ₽</span></div>
                 </div>
-                <h3 style="font-size:13px;color:var(--text);margin:8px 0 4px;">📸 Instagram</h3>
+                
+                <h3 style="font-size:13px;color:var(--text);margin:10px 0 4px;">📸 Instagram</h3>
                 <div class="price-table">
                     <div class="item"><span class="name"><i class="fas fa-heart"></i> Лайки</span><span class="cost">18.40 ₽</span></div>
                     <div class="item"><span class="name"><i class="fas fa-eye"></i> Просмотры</span><span class="cost">0.35 ₽</span></div>
+                    <div class="item"><span class="name"><i class="fas fa-users"></i> Подписчики</span><span class="cost">89.00 ₽</span></div>
                 </div>
-                <h3 style="font-size:13px;color:var(--text);margin:8px 0 4px;">💙 VK</h3>
+                
+                <h3 style="font-size:13px;color:var(--text);margin:10px 0 4px;">💙 VK</h3>
                 <div class="price-table">
                     <div class="item"><span class="name"><i class="fas fa-eye"></i> Просмотры поста</span><span class="cost">0.32 ₽</span></div>
                     <div class="item"><span class="name"><i class="fas fa-play"></i> Просмотры видео</span><span class="cost">1.05 ₽</span></div>
                     <div class="item"><span class="name"><i class="fas fa-heart"></i> Лайки</span><span class="cost">39.77 ₽</span></div>
                 </div>
+                
+                <p style="text-align:center;font-size:11px;color:var(--text-muted);margin-top:8px;">💎 Скидка 10% при заказе от 10 000 единиц</p>
             </div>
         </div>
 
@@ -638,25 +893,35 @@
         <div class="page" id="page-faq">
             <div class="card">
                 <h2><i class="fas fa-question-circle fa-pulse-custom"></i> Частые вопросы</h2>
+                
                 <div class="faq-item" onclick="toggleFaq(0)">
-                    <div class="q"><span><i class="fas fa-clock"></i> Скорость накрутки?</span><span class="arrow" id="faqArrow0">▼</span></div>
-                    <div class="a" id="faqAnswer0">5-30 минут после оплаты.</div>
+                    <div class="q"><span><i class="fas fa-clock"></i> Как быстро накручивается?</span><span class="arrow" id="faqArrow0">▼</span></div>
+                    <div class="a" id="faqAnswer0">⏱️ В среднем 5-30 минут. В пиковые часы до 1 часа.</div>
                 </div>
+                
                 <div class="faq-item" onclick="toggleFaq(1)">
-                    <div class="q"><span><i class="fas fa-shield-alt"></i> Безопасно?</span><span class="arrow" id="faqArrow1">▼</span></div>
-                    <div class="a" id="faqAnswer1">Да, безопасные методы.</div>
+                    <div class="q"><span><i class="fas fa-shield-alt"></i> Это безопасно для аккаунта?</span><span class="arrow" id="faqArrow1">▼</span></div>
+                    <div class="a" id="faqAnswer1">🛡️ Да! Мы используем только проверенные методы без риска для вашего аккаунта.</div>
                 </div>
+                
                 <div class="faq-item" onclick="toggleFaq(2)">
-                    <div class="q"><span><i class="fas fa-money-bill-wave"></i> Как пополнить?</span><span class="arrow" id="faqArrow2">▼</span></div>
-                    <div class="a" id="faqAnswer2">Через Telegram Stars или крипту.</div>
+                    <div class="q"><span><i class="fas fa-money-bill-wave"></i> Как пополнить баланс?</span><span class="arrow" id="faqArrow2">▼</span></div>
+                    <div class="a" id="faqAnswer2">💳 Через Telegram Stars, криптовалюту или банковскую карту через бота.</div>
                 </div>
+                
                 <div class="faq-item" onclick="toggleFaq(3)">
-                    <div class="q"><span><i class="fas fa-medal"></i> Гарантия?</span><span class="arrow" id="faqArrow3">▼</span></div>
-                    <div class="a" id="faqAnswer3">Да, вернём деньги при проблемах.</div>
+                    <div class="q"><span><i class="fas fa-medal"></i> Есть ли гарантия?</span><span class="arrow" id="faqArrow3">▼</span></div>
+                    <div class="a" id="faqAnswer3">✅ 100% гарантия! Если что-то пошло не так — вернём деньги.</div>
                 </div>
+                
                 <div class="faq-item" onclick="toggleFaq(4)">
-                    <div class="q"><span><i class="fas fa-robot"></i> Где мой баланс в боте?</span><span class="arrow" id="faqArrow4">▼</span></div>
-                    <div class="a" id="faqAnswer4">Ваш баланс синхронизирован с ботом @BoostSocialLikeBot</div>
+                    <div class="q"><span><i class="fas fa-rocket"></i> Можно ли заказать пробную версию?</span><span class="arrow" id="faqArrow4">▼</span></div>
+                    <div class="a" id="faqAnswer4">🎁 Да! Напишите нам в бот — сделаем тестовую накрутку бесплатно.</div>
+                </div>
+
+                <div class="faq-item" onclick="toggleFaq(5)">
+                    <div class="q"><span><i class="fas fa-gift"></i> Как работает реферальная программа?</span><span class="arrow" id="faqArrow5">▼</span></div>
+                    <div class="a" id="faqAnswer5">🎉 Приглашай друзей по своей ссылке. После выполнения подписок ты получаешь 7500 баллов, друг — 1000 баллов. За 20+ рефералов получаешь скидки до 25%.</div>
                 </div>
             </div>
         </div>
@@ -664,20 +929,24 @@
         <!-- ===== КОНТАКТЫ ===== -->
         <div class="page" id="page-contacts">
             <div class="card">
-                <div style="text-align:center;padding:4px 0;">
-                    <i class="fas fa-rocket" style="font-size:40px;"></i>
-                    <h3 style="font-size:17px;color:var(--text);">BoostSocialLike</h3>
-                    <p style="color:var(--text-muted);font-size:13px;">Накрутка для соцсетей</p>
+                <div style="text-align:center;padding:6px 0;">
+                    <i class="fas fa-rocket" style="font-size:48px;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;"></i>
+                    <h3 style="font-size:19px;color:var(--text);margin-top:4px;">BoostSocialLike</h3>
+                    <p style="color:var(--text-muted);font-size:13px;">Твой путь к популярности начинается здесь</p>
                 </div>
-                <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px;">
+                <div style="display:flex;flex-direction:column;gap:6px;margin-top:10px;">
                     <a href="https://t.me/SocialLikePro" target="_blank" class="contact-item">
-                        <i class="fab fa-telegram-plane fa-pulse-custom"></i>
-                        <div><div style="font-weight:600;">Telegram-бот</div><div style="font-size:11px;color:var(--text-muted);">@SocialLikePro</div></div>
+                        <i class="fab fa-telegram-plane fa-pulse-custom" style="color:#0088cc;"></i>
+                        <div><div style="font-weight:600;">Telegram-бот</div><div style="font-size:11px;color:var(--text-muted);">@SocialLikePro — начни сейчас</div></div>
                     </a>
                     <a href="https://t.me/BoostSocialLikeChannel" target="_blank" class="contact-item">
-                        <i class="fab fa-telegram-plane"></i>
-                        <div><div style="font-weight:600;">Канал</div><div style="font-size:11px;color:var(--text-muted);">Новости и акции</div></div>
+                        <i class="fab fa-telegram-plane" style="color:#0088cc;"></i>
+                        <div><div style="font-weight:600;">Новостной канал</div><div style="font-size:11px;color:var(--text-muted);">Акции, скидки, новости</div></div>
                     </a>
+                    <div style="padding:10px 14px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid var(--border);text-align:center;">
+                        <p style="font-size:12px;color:var(--text-muted);">📧 По вопросам сотрудничества:</p>
+                        <p style="font-size:13px;font-weight:600;color:var(--primary);">support@boostsociallike.com</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -687,37 +956,23 @@
         BoostSocialLike © 2026 • <a href="https://t.me/SocialLikePro" target="_blank">@SocialLikePro</a>
     </div>
 
-    <!-- ===== МОДАЛКА ПОПОЛНЕНИЯ ===== -->
-    <div id="topupModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);z-index:999;align-items:center;justify-content:center;padding:20px;">
-        <div class="card" style="max-width:400px;width:100%;">
-            <h2>💳 Пополнение баланса</h2>
-            <p class="sub">Пополните баланс через Telegram-бота</p>
-            <div style="display:flex;flex-direction:column;gap:8px;">
-                <button class="btn" onclick="window.open('https://t.me/SocialLikePro', '_blank')" style="width:100%;">
-                    <i class="fab fa-telegram-plane"></i> Перейти в бота
-                </button>
-                <button class="btn btn-secondary" onclick="closeTopup()" style="width:100%;">Закрыть</button>
-            </div>
-            <p style="text-align:center;font-size:11px;color:var(--text-muted);margin-top:8px;">После пополнения нажмите "Обновить"</p>
-        </div>
-    </div>
-
     <script>
         // ==========================================
         // === ПЕРЕМЕННЫЕ ===
         // ==========================================
         let isLoggedIn = false;
-        let selectedService = 'telegram';
-        let selectedPrice = 7.04;
         let userData = {
             phone: '',
             name: 'Пользователь',
-            balance: 1500,
-            orders: []
+            regDate: new Date().toLocaleDateString('ru-RU'),
+            level: 1,
+            achievements: ['🎯 Первый вход', '⭐ Заполнен профиль'],
+            referrals: [],
+            referralBonus: 0
         };
         let timerInterval = null;
         let timerSeconds = 60;
-        let orderIdCounter = 1001;
+        let notifEnabled = true;
 
         // ==========================================
         // === НАВИГАЦИЯ ===
@@ -727,13 +982,10 @@
             const page = document.getElementById('page-' + id);
             if (page) page.classList.add('active');
             document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-            const map = { home: 0, rates: 1, prices: 2, profile: 3, faq: 4, contacts: 5 };
+            const map = { home: 0, rates: 1, prices: 2, referral: 3, profile: 4, faq: 5, contacts: 6 };
             if (map[id] !== undefined) {
                 const links = document.querySelectorAll('.nav-links a');
                 if (links[map[id]]) links[map[id]].classList.add('active');
-            }
-            if (id === 'profile' && isLoggedIn) {
-                refreshData();
             }
         }
 
@@ -745,7 +997,25 @@
             const btn = document.querySelector('.theme-toggle');
             if (btn) btn.textContent = document.body.classList.contains('light-mode') ? '☀️' : '🌙';
             localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+            const toggle = document.getElementById('themeToggle');
+            if (toggle) {
+                if (document.body.classList.contains('light-mode')) {
+                    toggle.classList.remove('active');
+                } else {
+                    toggle.classList.add('active');
+                }
+            }
         }
+
+        function toggleThemeSettings() {
+            const toggle = document.getElementById('themeToggle');
+            toggle.classList.toggle('active');
+            document.body.classList.toggle('light-mode');
+            const btn = document.querySelector('.theme-toggle');
+            if (btn) btn.textContent = document.body.classList.contains('light-mode') ? '☀️' : '🌙';
+            localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+        }
+
         if (localStorage.getItem('theme') === 'light') {
             document.body.classList.add('light-mode');
             document.querySelector('.theme-toggle').textContent = '☀️';
@@ -765,7 +1035,6 @@
             document.getElementById('stepCode').style.display = 'block';
             showToast('📱 Код отправлен на ' + phone);
             startTimer();
-            // Автоматически заполняем код для демо
             setTimeout(() => {
                 const inputs = document.querySelectorAll('#codeInputs input');
                 const code = '1234';
@@ -822,7 +1091,6 @@
                 return;
             }
 
-            // Демо: любой 4-значный код подходит
             loginUser();
         }
 
@@ -833,10 +1101,27 @@
             document.getElementById('userBadgeText').textContent = userData.phone;
             document.getElementById('userName').textContent = userData.name;
             document.getElementById('userPhone').textContent = userData.phone;
-            updateBalanceDisplay();
-            renderOrders();
-            showToast('✅ Добро пожаловать, ' + userData.name + '!');
+            document.getElementById('regDate').textContent = userData.regDate;
+            
+            const reg = new Date(userData.regDate);
+            const now = new Date();
+            const days = Math.floor((now - reg) / (1000 * 60 * 60 * 24));
+            document.getElementById('daysCount').textContent = days || 1;
+            
+            const level = Math.min(10, Math.floor(days / 3) + 1);
+            userData.level = level;
+            document.getElementById('levelBadge').textContent = level;
+            
+            const levelNames = ['Новичок', 'Исследователь', 'Профи', 'Эксперт', 'Мастер', 'Гуру', 'Легенда', 'Мифический', 'Божественный', 'Абсолют'];
+            document.getElementById('levelName').textContent = levelNames[Math.min(level - 1, levelNames.length - 1)];
+            
+            document.getElementById('achievementsCount').textContent = userData.achievements.length;
+            
+            // Обновляем реферальную статистику
+            updateReferralStats();
+            
             localStorage.setItem('user', JSON.stringify(userData));
+            showToast('✅ Добро пожаловать, ' + userData.name + '!');
         }
 
         function logout() {
@@ -844,7 +1129,6 @@
             document.getElementById('authSection').style.display = 'block';
             document.getElementById('profileSection').style.display = 'none';
             document.getElementById('userBadgeText').textContent = 'Войти';
-            document.getElementById('userBadgeBalance').textContent = '';
             document.getElementById('stepPhone').style.display = 'block';
             document.getElementById('stepCode').style.display = 'none';
             localStorage.removeItem('user');
@@ -852,182 +1136,97 @@
         }
 
         // ==========================================
-        // === БАЛАНС И ДАННЫЕ ===
+        // === НАСТРОЙКИ ===
         // ==========================================
-        function updateBalanceDisplay() {
-            document.getElementById('userBalance').textContent = userData.balance.toLocaleString();
-            document.getElementById('userBadgeBalance').textContent = '💰 ' + userData.balance.toLocaleString();
+        function toggleNotification() {
+            const toggle = document.getElementById('notifToggle');
+            toggle.classList.toggle('active');
+            notifEnabled = toggle.classList.contains('active');
+            showToast(notifEnabled ? '🔔 Уведомления включены' : '🔕 Уведомления выключены');
+            localStorage.setItem('notif', notifEnabled);
         }
 
-        function renderOrders() {
-            const container = document.getElementById('ordersList');
-            if (!container) return;
-            
-            if (userData.orders.length === 0) {
-                container.innerHTML = `
-                    <div class="order-empty">
-                        <i class="fas fa-inbox"></i>
-                        <p>Заказов пока нет</p>
-                        <p style="font-size:11px;">Создайте первый заказ выше</p>
-                    </div>
-                `;
-                return;
-            }
-
-            container.innerHTML = userData.orders.map(order => `
-                <div class="order-item">
-                    <div>
-                        <span>${order.service}</span>
-                        <br><span class="order-id">#${order.id}</span>
-                        <br><span class="date">${order.date}</span>
-                    </div>
-                    <div style="text-align:right;">
-                        <span style="font-weight:600;">${order.amount.toLocaleString()}</span>
-                        <br><span class="status ${order.status}">${getStatusText(order.status)}</span>
-                        <br><span class="date">${order.price} ₽</span>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function getStatusText(status) {
-            const map = {
-                'done': '✅ Выполнен',
-                'pending': '⏳ В обработке',
-                'processing': '🔄 Выполняется',
-                'failed': '❌ Ошибка'
+        function changeLanguage(lang) {
+            const names = {
+                'ru': 'Русский',
+                'en': 'English',
+                'kz': 'Қазақша'
             };
-            return map[status] || status;
+            showToast('🌐 Язык изменён на ' + (names[lang] || lang));
+            localStorage.setItem('lang', lang);
         }
 
-        function refreshData() {
-            if (!isLoggedIn) return;
-            showToast('🔄 Обновление данных...');
-            
-            // Имитация запроса к API бота
-            setTimeout(() => {
-                // Обновляем баланс (немного меняем для реализма)
-                const change = Math.floor(Math.random() * 20) - 10;
-                userData.balance = Math.max(0, userData.balance + change);
-                updateBalanceDisplay();
-                
-                // Обновляем статусы заказов
-                userData.orders = userData.orders.map(order => {
-                    if (order.status === 'pending' && Math.random() > 0.6) {
-                        return { ...order, status: 'processing' };
-                    }
-                    if (order.status === 'processing' && Math.random() > 0.7) {
-                        return { ...order, status: 'done' };
-                    }
-                    return order;
+        function showPrivacy() {
+            showToast('🔒 Ваши данные защищены и не передаются третьим лицам');
+        }
+
+        // ==========================================
+        // === РЕФЕРАЛЬНАЯ ПРОГРАММА ===
+        // ==========================================
+        function copyRefLink() {
+            const input = document.getElementById('refLink');
+            if (input) {
+                input.select();
+                document.execCommand('copy');
+                showToast('✅ Реферальная ссылка скопирована! Приглашай друзей!');
+            }
+        }
+
+        function shareRefLink() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'BoostSocialLike',
+                    text: '🎁 Приглашаю тебя в BoostSocialLike! Накрутка подписчиков, лайков и просмотров. Получи бонус 1000 баллов!',
+                    url: 'https://t.me/SocialLikePro?start=ref_123456'
                 });
-                
-                renderOrders();
-                showToast('✅ Данные обновлены!');
-            }, 1000);
-        }
-
-        // ==========================================
-        // === ЗАКАЗЫ ===
-        // ==========================================
-        function selectService(el, service, price) {
-            document.querySelectorAll('.service-btn').forEach(b => b.classList.remove('active'));
-            el.classList.add('active');
-            selectedService = service;
-            selectedPrice = price;
-            updateOrderTotal();
-        }
-
-        function updateOrderTotal() {
-            const amount = parseInt(document.getElementById('orderAmount').value) || 0;
-            const total = (amount / 1000) * selectedPrice;
-            document.getElementById('orderTotal').textContent = total.toFixed(2) + ' ₽';
-        }
-
-        document.getElementById('orderAmount')?.addEventListener('input', updateOrderTotal);
-
-        function createOrder() {
-            if (!isLoggedIn) {
-                showToast('⚠️ Сначала войдите в кабинет');
-                return;
+            } else {
+                copyRefLink();
             }
+        }
 
-            const amount = parseInt(document.getElementById('orderAmount').value) || 0;
-            const link = document.getElementById('orderLink').value.trim();
+        function shareRefTelegram() {
+            const text = '🎁 Приглашаю тебя в BoostSocialLike! Накрутка подписчиков, лайков и просмотров. Получи бонус 1000 баллов!\n\n👉 https://t.me/SocialLikePro?start=ref_123456';
+            window.open('https://t.me/share/url?url=' + encodeURIComponent('https://t.me/SocialLikePro?start=ref_123456') + '&text=' + encodeURIComponent(text), '_blank');
+        }
+
+        function updateReferralStats() {
+            const total = userData.referrals ? userData.referrals.length : 0;
+            const active = userData.referrals ? userData.referrals.filter(r => r.active).length : 0;
+            document.getElementById('refTotal').textContent = total;
+            document.getElementById('refActive').textContent = active;
+            document.getElementById('refBonus').textContent = userData.referralBonus || 0;
             
-            if (amount < 1) {
-                showToast('⚠️ Введите количество');
-                return;
+            // Обновляем список рефералов
+            const list = document.getElementById('refList');
+            if (userData.referrals && userData.referrals.length > 0) {
+                list.innerHTML = userData.referrals.map((ref, i) => `
+                    <div class="order-item">
+                        <div>
+                            <span>${ref.name || 'Пользователь ' + (i + 1)}</span>
+                            <br><span class="date">${ref.date || 'Сегодня'}</span>
+                        </div>
+                        <div style="text-align:right;">
+                            <span class="status ${ref.active ? 'done' : 'pending'}">${ref.active ? '✅ Активен' : '⏳ Ожидает'}</span>
+                            <br><span class="date">${ref.active ? '+7500 баллов' : '—'}</span>
+                        </div>
+                    </div>
+                `).join('');
             }
+        }
 
-            const totalPrice = (amount / 1000) * selectedPrice;
-            
-            if (totalPrice > userData.balance) {
-                showToast('⚠️ Недостаточно средств! Пополните баланс');
-                return;
+        // Добавляем тестовых рефералов для демонстрации
+        function addTestReferrals() {
+            if (!userData.referrals || userData.referrals.length === 0) {
+                userData.referrals = [
+                    { name: 'Алексей', date: '12.08.2026', active: true },
+                    { name: 'Мария', date: '10.08.2026', active: true },
+                    { name: 'Дмитрий', date: '08.08.2026', active: false }
+                ];
+                userData.referralBonus = 15000;
+                localStorage.setItem('user', JSON.stringify(userData));
+                if (isLoggedIn) updateReferralStats();
             }
-
-            // Списываем средства
-            userData.balance -= totalPrice;
-            updateBalanceDisplay();
-
-            // Создаём заказ
-            const serviceNames = {
-                'telegram': '📱 Telegram подписчики',
-                'tiktok': '🎵 TikTok просмотры',
-                'instagram': '📸 Instagram лайки',
-                'vk': '💙 VK просмотры'
-            };
-
-            const newOrder = {
-                id: orderIdCounter++,
-                service: serviceNames[selectedService] || selectedService,
-                amount: amount,
-                price: totalPrice.toFixed(2),
-                date: new Date().toLocaleDateString('ru-RU'),
-                status: 'pending',
-                link: link || '—'
-            };
-
-            userData.orders.unshift(newOrder);
-            renderOrders();
-            
-            // Отправляем запрос в бота (имитация)
-            showToast('🚀 Заказ #' + newOrder.id + ' создан!');
-            
-            // Автоматически обновляем статус через 5 сек
-            setTimeout(() => {
-                newOrder.status = 'processing';
-                renderOrders();
-                showToast('🔄 Заказ #' + newOrder.id + ' выполняется...');
-            }, 5000);
-
-            // Через 15 сек завершаем
-            setTimeout(() => {
-                newOrder.status = 'done';
-                renderOrders();
-                showToast('✅ Заказ #' + newOrder.id + ' выполнен!');
-            }, 15000);
-
-            // Сохраняем
-            localStorage.setItem('user', JSON.stringify(userData));
         }
-
-        // ==========================================
-        // === ПОПОЛНЕНИЕ ===
-        // ==========================================
-        function openTopup() {
-            document.getElementById('topupModal').style.display = 'flex';
-        }
-
-        function closeTopup() {
-            document.getElementById('topupModal').style.display = 'none';
-        }
-
-        // Закрытие по клику вне модалки
-        document.getElementById('topupModal')?.addEventListener('click', function(e) {
-            if (e.target === this) closeTopup();
-        });
 
         // ==========================================
         // === КАЛЬКУЛЯТОР ===
@@ -1053,18 +1252,6 @@
         }, 4000);
 
         // ==========================================
-        // === СТАТИСТИКА ===
-        // ==========================================
-        let orders = 3892;
-        let clients = 1247;
-        setInterval(() => {
-            orders += Math.floor(Math.random() * 2);
-            clients += Math.floor(Math.random() * 1);
-            document.getElementById('clientsCount').textContent = clients.toLocaleString();
-            document.getElementById('ordersCount').textContent = orders.toLocaleString();
-        }, 5000);
-
-        // ==========================================
         // === FAQ ===
         // ==========================================
         function toggleFaq(index) {
@@ -1084,7 +1271,7 @@
             if (input) {
                 input.select();
                 document.execCommand('copy');
-                showToast('✅ Ссылка скопирована!');
+                showToast('✅ Ссылка скопирована! Бонус 50 монет за репост');
             }
         }
 
@@ -1092,7 +1279,7 @@
             if (navigator.share) {
                 navigator.share({
                     title: 'BoostSocialLike',
-                    text: '🔥 Накрутка подписчиков, лайков и просмотров!',
+                    text: '🔥 Накрутка подписчиков, лайков и просмотров! Быстро, дёшево, безопасно!',
                     url: window.location.href
                 });
             } else {
@@ -1118,21 +1305,30 @@
         // === ЗАГРУЗКА ===
         // ==========================================
         window.addEventListener('DOMContentLoaded', () => {
-            // Проверяем сохранённого пользователя
             const saved = localStorage.getItem('user');
             if (saved) {
                 try {
                     userData = JSON.parse(saved);
-                    if (userData.orders && userData.orders.length > 0) {
-                        orderIdCounter = Math.max(...userData.orders.map(o => o.id)) + 1;
-                    }
                     loginUser();
                 } catch(e) {}
             }
-            calcPrice();
-            updateOrderTotal();
             
-            // Фокус на поле ввода кода
+            // Добавляем тестовых рефералов (если нет своих)
+            addTestReferrals();
+            
+            calcPrice();
+            
+            const notif = localStorage.getItem('notif');
+            if (notif === 'false') {
+                document.getElementById('notifToggle').classList.remove('active');
+                notifEnabled = false;
+            }
+            
+            const lang = localStorage.getItem('lang');
+            if (lang) {
+                document.getElementById('langSelect').value = lang;
+            }
+
             document.querySelectorAll('#codeInputs input').forEach((inp, i) => {
                 inp.addEventListener('keydown', (e) => {
                     if (e.key === 'Backspace' && !inp.value && i > 0) {
@@ -1140,12 +1336,7 @@
                     }
                 });
             });
-
-            // Автообновление каждые 30 сек
-            setInterval(() => {
-                if (isLoggedIn) refreshData();
-            }, 30000);
         });
     </script>
 </body>
-  </html>
+                    </html>
