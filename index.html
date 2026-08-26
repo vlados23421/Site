@@ -1,41 +1,19 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BoostSocial - Likes</title>
-    <!-- Подключаем библиотеку Telegram -->
+    <link rel="stylesheet" href="css/style.css">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <style>
-        body { font-family: sans-serif; padding: 20px; background-color: #f0f2f5; }
-        input { width: 100%; padding: 10px; margin: 10px 0; border-radius: 8px; border: 1px solid #ccc; }
-        button { width: 100%; padding: 12px; background: #2678ff; color: white; border: none; border-radius: 8px; }
-    </style>
 </head>
 <body>
-    <h3>BoostSocial App</h3>
-    <input type="text" id="postLink" placeholder="Вставьте ссылку на пост...">
-    <input type="number" id="likeCount" placeholder="Количество лайков...">
-    <button onclick="submitOrder()">Заказать</button>
-
-    <script>
-        // Инициализируем WebApp
-        let tg = window.Telegram.WebApp;
-        tg.expand(); // Разворачиваем на весь экран
-
-        function submitOrder() {
-            let link = document.getElementById('postLink').value;
-            let count = document.getElementById('likeCount').value;
-
-            // Отправляем данные боту
-            tg.sendData(JSON.stringify({
-                "action": "order_likes",
-                "link": link,
-                "count": count
-            }));
-            
-            tg.close(); // Закрываем окно после отправки
-        }
-    </script>
+    <div class="container">
+        <h2>Boost Social</h2>
+        <div class="input-group">
+            <input type="text" id="link" placeholder="Ссылка на пост...">
+        </div>
+        <div class="input-group">
+            <input type="number" id="count" placeholder="Количество...">
+        </div>
+    </div>
+    <script src="js/app.js"></script>
 </body>
 </html>
